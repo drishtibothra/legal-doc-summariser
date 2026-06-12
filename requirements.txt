@@ -1,0 +1,12 @@
+transformers
+nltk
+rouge-score
+numpy
+streamlit
+# gspread==5.12.0
+# google-auth
+torchvision
+torch
+kagglehub
+PyPDF2
+plotly

@@ -1,0 +1,27 @@
+# Virtual Environment
+ml_env/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Google Cloud credentials
+elated-parser-499214-j3-9dfc7b0a68c5.json
+
+# Fine-tuned model
+FineTunedBartModel/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
