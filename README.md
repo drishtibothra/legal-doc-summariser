@@ -51,13 +51,15 @@ streamlit run app.py
 | Best suited for | Legal, legislative, and structured document text |
 
 ---
-
+ 
 ## What broke and what I learned
-
-**Streamlit reruns on every click** — clicking "Save to Google Sheets" triggered a full script rerun, which wiped the generated summary before it could be logged. Fixed by persisting the summary and input text in `st.session_state` so they survive reruns.
-
-**PDF extraction failures on scanned docs** — PyPDF2 returns empty strings on image-based PDFs. Added a detection check and a clear error message rather than silently returning nothing.
-
+ 
+**Input length truncation lost critical context** — BART's 1024-token input limit meant longer legal documents got cut off mid-clause before reaching the model. Important context in later sections (especially closing clauses and conditions) was silently dropped. I learned that for real legal documents, a single forward pass isn't enough — chunking with overlap, or a retrieval step to identify the most relevant sections first, is necessary for production use.
+ 
+**Domain mismatch between BillSum and general legal text** — BillSum is built from US Congressional bills, which have a fairly rigid structure (sections, subsections, numbered clauses). When I tested the fine-tuned model on contracts and case summaries with different structure and vocabulary, output quality dropped noticeably compared to bill-style text. This taught me that fine-tuning accuracy on a benchmark dataset doesn't automatically transfer to the messier, more varied documents a real team would actually feed it.
+ 
+**Beam search produced repetitive phrasing on dense text** — with `num_beams=4`, sufficiently dense legal text caused the model to repeat near-identical phrases across the summary. Adding `no_repeat_ngram_size` to the generation config reduced this, but didn't eliminate it on the densest inputs. I learned generation parameters matter as much as the fine-tuning itself.
+ 
 ---
 
 ## Roadmap
