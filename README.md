@@ -19,7 +19,6 @@ This tool removes that bottleneck. You feed it a document, it gives you what mat
 - **AI summarization** using BART-large fine-tuned on BillSum legal dataset
 - **Two input modes** — paste text directly, or upload a PDF
 - **Compression metrics** — live word count before/after and compression ratio, shown as metric cards
-- **Google Sheets export** — one click logs the input snippet, summary, word counts, compression ratio, and timestamp to a live sheet
 
 ---
 
@@ -28,7 +27,6 @@ This tool removes that bottleneck. You feed it a document, it gives you what mat
 - Python 3.10+
 - Streamlit — UI framework
 - Hugging Face Transformers + PyTorch — BART-large-CNN fine-tuned on BillSum
-- gspread + Google Auth — Sheets export pipeline
 - PyPDF2 — PDF text extraction
 
 ---
@@ -42,24 +40,6 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-For Google Sheets export, add a `secrets.toml` file under `.streamlit/`:
-
-```toml
-[gcp_service_account]
-type = "service_account"
-project_id = "your-project-id"
-private_key_id = "..."
-private_key = "..."
-client_email = "..."
-token_uri = "https://oauth2.googleapis.com/token"
-
-[sheet]
-sheet_name = "Legal Summary Logs"
-```
-
-Share your Google Sheet with the `client_email` from the service account (Editor access).
-
----
 
 ## Model details
 
@@ -68,7 +48,6 @@ Share your Google Sheet with the `client_email` from the service account (Editor
 | Base model | facebook/bart-large-cnn |
 | Fine-tuning dataset | BillSum (US Congressional Bills) |
 | Evaluation metric | ROUGE-L |
-| Accuracy | 92% ROUGE-L on test set |
 | Best suited for | Legal, legislative, and structured document text |
 
 ---
@@ -79,8 +58,6 @@ Share your Google Sheet with the `client_email` from the service account (Editor
 
 **PDF extraction failures on scanned docs** — PyPDF2 returns empty strings on image-based PDFs. Added a detection check and a clear error message rather than silently returning nothing.
 
-**Google Sheets auth in deployment** — local service account JSON files don't survive Streamlit Cloud deploys. Moved credentials to Streamlit secrets and rebuilt the auth flow around `st.secrets`.
-
 ---
 
 ## Roadmap
@@ -89,7 +66,6 @@ Share your Google Sheet with the `client_email` from the service account (Editor
 - Batch processing — CSV upload, summaries for multiple documents at once
 - OCR support for scanned PDFs
 - Configurable summary length slider
-- WhatsApp-compatible output format for direct sharing
 
 ---
 
